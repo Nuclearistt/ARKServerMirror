@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
+	<ItemGroup Label="ProjectConfigurations">
+		<ProjectConfiguration Include="Debug|x64">
+			<Configuration>Debug</Configuration>
+			<Platform>x64</Platform>
+		</ProjectConfiguration>
+		<ProjectConfiguration Include="Release|x64">
+			<Configuration>Release</Configuration>
+			<Platform>x64</Platform>
+		</ProjectConfiguration>
+	</ItemGroup>
+	<PropertyGroup Label="Globals">
+		<ProjectGuid>{d1c749dd-9554-41da-bf1f-4bd6e94f3d7a}</ProjectGuid>
+		<Keyword>Linux</Keyword>
+		<LinuxProjectType>{D51BCBC9-82E9-4017-911E-C93873C4EA2B}</LinuxProjectType>
+		<TargetLinuxPlatform>Generic</TargetLinuxPlatform>
+		<ApplicationType>Linux</ApplicationType>
+		<ApplicationTypeRevision>1.0</ApplicationTypeRevision>
+		<RootNamespace>ArkServerMirror</RootNamespace>
+	</PropertyGroup>
+	<Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props"/>
+	<PropertyGroup Label="Configuration">
+		<PlatformToolset>WSL2_Clang_1_0</PlatformToolset>
+	</PropertyGroup>
+	<PropertyGroup Label="Configuration" Condition="'$(Configuration)'=='Debug'">
+		<UseDebugLibraries>True</UseDebugLibraries>
+	</PropertyGroup>
+	<Import Project="$(VCTargetsPath)\Microsoft.Cpp.props"/>
+	<PropertyGroup>
+    	<IntDir>$(ProjectDir)obj\$(Configuration)\Linux\</IntDir>
+    	<OutDir>$(ProjectDir)bin\$(Configuration)\Linux\</OutDir>
+    	<TargetName>ArkServerMirror</TargetName>
+		<LocalRemoteCopySources>False</LocalRemoteCopySources>
+	</PropertyGroup>
+	<ItemDefinitionGroup>
+		<ClCompile>
+			<CppLanguageStandard>c++20</CppLanguageStandard>
+			<AdditionalIncludeDirectories>include</AdditionalIncludeDirectories>
+		</ClCompile>
+		<Link>
+			<AdditionalLibraryDirectories>lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+			<LibraryDependencies>steam_api</LibraryDependencies>
+			<AdditionalOptions>-Wl,-rpath=\$ORIGIN %(AdditionalOptions)</AdditionalOptions>
+		</Link>
+	</ItemDefinitionGroup>
+	<ItemDefinitionGroup Condition="'$(Configuration)'=='Release'">
+		<ClCompile>
+			<ThreadSafeStatics>No</ThreadSafeStatics>
+			<SymbolsHiddenByDefault>True</SymbolsHiddenByDefault>
+		</ClCompile>
+	</ItemDefinitionGroup>
+	<ItemGroup>
+		<ClCompile Include="ArkServerMirror.Linux.cpp"/>
+	</ItemGroup>
+	<Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets"/>
+</Project>

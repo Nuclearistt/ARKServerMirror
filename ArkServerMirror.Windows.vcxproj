@@ -1,0 +1,98 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
+	<ItemGroup Label="ProjectConfigurations">
+		<ProjectConfiguration Include="Debug|x64">
+			<Configuration>Debug</Configuration>
+			<Platform>x64</Platform>
+		</ProjectConfiguration>
+		<ProjectConfiguration Include="Release|x64">
+			<Configuration>Release</Configuration>
+			<Platform>x64</Platform>
+		</ProjectConfiguration>
+	</ItemGroup>
+	<PropertyGroup Label="Globals">
+		<VCProjectVersion>17.0</VCProjectVersion>
+		<ProjectGuid>{a6ba6a6e-32c5-40b3-99ca-f828134b3208}</ProjectGuid>
+		<Keyword>Win32Proj</Keyword>
+		<RootNamespace>ArkServerMirror</RootNamespace>
+		<WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+	</PropertyGroup>
+	<Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props"/>
+	<PropertyGroup Label="Configuration">
+		<ConfigurationType>Application</ConfigurationType>
+		<PlatformToolset>ClangCL</PlatformToolset>
+		<CharacterSet>Unicode</CharacterSet>
+	</PropertyGroup>
+	<PropertyGroup Label="Configuration" Condition="'$(Configuration)'=='Debug'">
+		<UseDebugLibraries>True</UseDebugLibraries>
+	</PropertyGroup>
+	<Import Project="$(VCTargetsPath)\Microsoft.Cpp.props"/>
+	<ImportGroup Label="PropertySheets">
+		<Import Label="LocalAppDataPlatform" Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')"/>
+	</ImportGroup>
+	<PropertyGroup>
+    	<IntDir>obj\$(Configuration)\Windows</IntDir>
+    	<OutDir>bin\$(Configuration)\Windows</OutDir>
+    	<TargetName>ArkServerMirror</TargetName>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)'=='Debug'">
+		<LinkIncremental>True</LinkIncremental>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)'=='Release'">
+		<LinkIncremental>False</LinkIncremental>
+		<PostBuildEventUseInBuild>True</PostBuildEventUseInBuild>
+		<WindowsKitRoot>$([MSBuild]::GetRegistryValue('HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Kits\Installed Roots', 'KitsRoot10'))</WindowsKitRoot>
+    	<SignToolPath Condition="'$(WindowsKitRoot)' != ''">$(WindowsKitRoot)App Certification Kit\signtool.exe</SignToolPath>
+	</PropertyGroup>
+	<ItemDefinitionGroup>
+		<ClCompile>
+			<LanguageStandard>stdcpp20</LanguageStandard>
+			<WarningLevel>Level3</WarningLevel>
+			<SDLCheck>True</SDLCheck>
+			<MultiProcessorCompilation>True</MultiProcessorCompilation>
+			<IntrinsicFunctions>True</IntrinsicFunctions>
+			<StringPooling>True</StringPooling>
+			<AdditionalOptions>/Gw /J %(AdditionalOptions)</AdditionalOptions>
+			<AdditionalIncludeDirectories>include</AdditionalIncludeDirectories>
+		</ClCompile>
+		<Link>
+			<SubSystem>Console</SubSystem>
+			<GenerateDebugInformation>True</GenerateDebugInformation>
+			<AdditionalLibraryDirectories>lib</AdditionalLibraryDirectories>
+			<AdditionalDependencies>Ws2_32.lib;steam_api64.lib;%(AdditionalDependencies)</AdditionalDependencies>
+		</Link>
+	</ItemDefinitionGroup>
+	<ItemDefinitionGroup Condition="'$(Configuration)'=='Debug'">
+		<ClCompile>
+			<RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+			<PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+		</ClCompile>
+	</ItemDefinitionGroup>
+	<ItemDefinitionGroup Condition="'$(Configuration)'=='Release'">
+		<ClCompile>
+			<RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+			<FunctionLevelLinking>True</FunctionLevelLinking>
+			<FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+			<IntelJCCErratum>True</IntelJCCErratum>
+			<PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+		</ClCompile>
+		<Link>
+			<EnableCOMDATFolding>True</EnableCOMDATFolding>
+			<OptimizeReferences>True</OptimizeReferences>
+			<LinkTimeCodeGeneration>UseFastLinkTimeCodeGeneration</LinkTimeCodeGeneration>
+		</Link>
+		<PostBuildEvent>
+			<Command Condition="exists('$(SignToolPath)')">call "$(SignToolPath)" sign /a /tr http://timestamp.digicert.com /td sha256 /fd sha256 bin\Release\Windows\ArkServerMirror.exe</Command>
+		</PostBuildEvent>
+	</ItemDefinitionGroup>
+	<ItemGroup>
+		<Manifest Include="res\ArkServerMirror.manifest"/>
+	</ItemGroup>
+	<ItemGroup>
+		<ClCompile Include="ArkServerMirror.Windows.cpp"/>
+	</ItemGroup>
+	<ItemGroup>
+		<ResourceCompile Include="res\ResourceScript.rc"/>
+	</ItemGroup>
+	<Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets"/>
+</Project>
